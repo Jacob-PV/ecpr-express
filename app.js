@@ -393,6 +393,7 @@ function renderWeekly() {
     <div class="export-box">
       <h3>Download your report</h3>
       <p class="hint">eCPR XML → log in at the <a href="https://services.dir.ca.gov/pw" target="_blank" rel="noopener">DIR Public Works Portal</a>, upload the XML file, then sign &amp; submit there. WH-347 PDF → for federal jobs or your records.</p>
+      <p class="hint">The XML filename (e.g. <code>6789_412345_060626.xml</code>) follows the DIR's required naming format — don't rename it. If your browser shows a download warning, choose Keep: the file is created on your own computer from the data you typed; nothing is downloaded from the internet.</p>
       <div class="row-actions">
         <button class="primary" id="x-xml">Download eCPR XML</button>
         <button class="primary" id="x-pdf">Download WH-347 PDF</button>
@@ -821,7 +822,30 @@ function showPaywall() {
 
 /* ---------- download ---------- */
 
-function downloadBlob(blob, filename) {
+/* Prefer the native Save As dialog (File System Access API): files saved
+   through it skip Chrome's download shelf, so users don't get the
+   "could harm your device" warning that anchor downloads from a
+   low-reputation domain trigger. Fall back to anchor download elsewhere. */
+async function downloadBlob(blob, filename) {
+  if (window.showSaveFilePicker) {
+    const ext = filename.slice(filename.lastIndexOf("."));
+    try {
+      const handle = await window.showSaveFilePicker({
+        suggestedName: filename,
+        types: [{
+          description: ext === ".xml" ? "DIR eCPR XML payroll file" : "WH-347 certified payroll PDF",
+          accept: ext === ".xml" ? { "application/xml": [".xml"] } : { "application/pdf": [".pdf"] }
+        }]
+      });
+      const w = await handle.createWritable();
+      await w.write(blob);
+      await w.close();
+      return;
+    } catch (e) {
+      if (e && e.name === "AbortError") return; // user cancelled the dialog — respect it
+      /* picker unavailable (e.g. blocked) — fall through to anchor download */
+    }
+  }
   const a = document.createElement("a");
   a.href = URL.createObjectURL(blob);
   a.download = filename;
