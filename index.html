@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>California Certified Payroll Generator — DIR eCPR XML + WH-347 PDF | eCPR Express</title>
+<meta name="description" content="Generate California DIR eCPR XML files and the official federal WH-347 certified payroll PDF in minutes. 100% in your browser — SSNs and wages never leave your computer. Free during launch.">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="hero">
+  <div class="container">
+    <div class="brand">eCPR&nbsp;Express</div>
+    <h1>California certified payroll in minutes, not hours</h1>
+    <p class="sub">Enter your crew's hours once. Download a DIR-ready <strong>eCPR XML</strong> upload file
+    and the official <strong>WH-347</strong> PDF — calculations done for you.</p>
+    <p class="privacy">🔒 Everything runs in your browser. Names, SSNs, and wages are saved on <em>your</em> computer only — nothing is ever sent to a server.</p>
+    <a class="cta" href="#app">Start your payroll report — free</a>
+    <p class="beta-note">Free during launch. Founding customers lock in $19/month for unlimited reports —
+    <a href="mailto:shortstop900235@gmail.com?subject=eCPR%20Express%20founding%20price">claim founding pricing</a>.</p>
+  </div>
+</header>
+
+<section class="features container">
+  <div class="feature">
+    <h3>DIR eCPR XML upload</h3>
+    <p>Skip hand-keying every worker, every week into the DIR online form. Generate a schema-valid XML file, upload it at the DIR eCPR portal, sign, done.</p>
+  </div>
+  <div class="feature">
+    <h3>Official WH-347 PDF</h3>
+    <p>For federal and federally-assisted jobs we fill the actual U.S. DOL WH-347 form — including the Statement of Compliance — ready to sign and submit.</p>
+  </div>
+  <div class="feature">
+    <h3>Remembers your crew</h3>
+    <p>Your company, projects, and employees are saved locally. Next week's report takes two minutes: enter hours, download, submit.</p>
+  </div>
+</section>
+
+<main id="app" class="container">
+  <nav class="tabs">
+    <button class="tab active" data-tab="company">1. Company</button>
+    <button class="tab" data-tab="projects">2. Projects</button>
+    <button class="tab" data-tab="employees">3. Crew</button>
+    <button class="tab" data-tab="weekly">4. Weekly report</button>
+  </nav>
+
+  <section class="panel active" id="panel-company"></section>
+  <section class="panel" id="panel-projects"></section>
+  <section class="panel" id="panel-employees"></section>
+  <section class="panel" id="panel-weekly"></section>
+</main>
+
+<section class="container faq">
+  <h2>FAQ</h2>
+  <details><summary>Is this really free?</summary><p>Yes — free while we're in launch. When paid plans start, early users keep a founding discount. Email us to lock it in.</p></details>
+  <details><summary>Where does my data go?</summary><p>Nowhere. The app is a static page; all data lives in your browser's local storage and the files you download. We never see your payroll.</p></details>
+  <details><summary>Does this submit to the DIR for me?</summary><p>Not yet. You download the XML file and upload it at the DIR's eCPR page (Submit Payroll in XML File), then sign and submit there. That upload takes about a minute — the painful part (typing in every worker, every day, every deduction) is what we eliminate.</p></details>
+  <details><summary>Is the WH-347 accepted by agencies?</summary><p>We fill the official U.S. Department of Labor WH-347 form itself (OMB-approved layout), including the Statement of Compliance on page 2.</p></details>
+  <details><summary>What about more than 8 workers?</summary><p>The WH-347 has 8 rows per sheet — we automatically produce additional continuation sheets in the same PDF. The eCPR XML has no worker limit.</p></details>
+</section>
+
+<footer>
+  <div class="container">
+    <p>eCPR Express — built for California public-works subcontractors.
+    Questions or feature requests: <a href="mailto:shortstop900235@gmail.com">shortstop900235@gmail.com</a></p>
+    <p class="fine">Not affiliated with the California DIR or U.S. DOL. This tool prepares reports from data you enter; you are responsible for the accuracy of your filings.</p>
+  </div>
+</footer>
+
+<script src="vendor/pdf-lib.min.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
