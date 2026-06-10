@@ -832,6 +832,60 @@ function downloadBlob(blob, filename) {
 
 /* ---------- init ---------- */
 
+/* first-visit demo: one click loads a realistic example so visitors can
+   download a finished XML/PDF before typing their own crew in */
+function loadSampleData() {
+  state.company = {
+    name: "Sample Concrete Inc", role: "subcontractor",
+    licenseType: "CSLB", licenseNum: "123456", pwcr: "1000054321", fein: "954321987",
+    street: "12 Industry Way", city: "Fresno", state: "CA", zip: "93701",
+    insuranceNum: "WC-9988776", email: "office@sampleconcrete.com"
+  };
+  state.projects = [{
+    id: "demo-proj", label: "Demo: Library Renovation", dirProjectID: "412345",
+    contractAgency: "BigBuild General Contractors Inc", awardingBody: "", projectName: "Library Renovation",
+    projectNum: "JOB-22", locStreet: "", locCity: "Fresno", locCounty: "Fresno", locState: "CA", locZip: ""
+  }];
+  state.employees = [
+    { id: "demo-emp1", name: "Juan Martinez", ssn: "611223333", exemptions: "2", workClass: "Cement Mason",
+      rateST: "38.50", rateOT: "57.75", rateDT: "77.00", fringeRate: "12.25",
+      street: "44 Oak St", city: "Fresno", state: "CA", zip: "93702" },
+    { id: "demo-emp2", name: "Mike Brown", ssn: "622334444", exemptions: "0", workClass: "Laborer Group 1",
+      rateST: "29.00", rateOT: "43.50", rateDT: "58.00", fringeRate: "",
+      street: "9 Pine Ave", city: "Clovis", state: "CA", zip: "93611" }
+  ];
+  week = newWeek();
+  week.projectId = "demo-proj";
+  const lastSat = new Date(); lastSat.setDate(lastSat.getDate() - ((lastSat.getDay() + 1) % 7 || 7));
+  week.weekEnding = iso(lastSat);
+  week.payrollNum = "1";
+  week.signName = "Pat Sample"; week.signTitle = "Owner";
+  week.entries = state.employees.map(e => {
+    const en = blankEntry(e.id);
+    for (let i = 1; i <= 5; i++) en.days[i].st = "8";
+    en.ded.fedTax = "120.00"; en.ded.fica = "95.00"; en.ded.stateTax = "45.00"; en.ded.sdi = "14.00";
+    en.checkNum = "1001";
+    return en;
+  });
+  save();
+  renderCompany(); renderProjects(); renderEmployees(); renderWeekly();
+  gotoTab("weekly");
+  document.getElementById("app").scrollIntoView({ behavior: "smooth" });
+}
+
+(function maybeOfferDemo() {
+  if (state.company.name || state.employees.length) return;
+  const bar = document.createElement("div");
+  bar.style.cssText = "background:#fff8f3;border:1px solid #c8541a;border-radius:8px;padding:12px 16px;margin:10px 0;display:flex;gap:12px;align-items:center;flex-wrap:wrap";
+  bar.innerHTML = `<span>New here? See a finished report in one click:</span>`;
+  const btn = document.createElement("button");
+  btn.className = "primary"; btn.textContent = "Load sample crew & week";
+  btn.addEventListener("click", () => { loadSampleData(); bar.remove(); });
+  bar.appendChild(btn);
+  const app = document.getElementById("app");
+  app.insertBefore(bar, app.firstChild);
+})();
+
 if (location.search.indexOf("subscribed=1") !== -1) {
   const note = document.createElement("div");
   note.textContent = "✓ You're on the founding list — we'll email you before paid plans start. The tool below is free to use right now.";
