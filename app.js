@@ -5,6 +5,17 @@
 
 const LS_KEY = "ecprx-v1";
 
+/* Monetization config — dormant until checkoutUrl is set.
+   To go live: create a Lemon Squeezy product, paste its checkout URL below,
+   set enabled:true. License keys are validated client-side via the public
+   license API (no secret needed for activate/validate). */
+const PAYWALL = Object.assign({
+  enabled: false,
+  freeReports: 3,
+  checkoutUrl: "",            // e.g. https://yourstore.lemonsqueezy.com/checkout/buy/PRODUCT-UUID
+  priceText: "$19/month — unlimited reports, founding price"
+}, window.ECPRX_PAYWALL_OVERRIDE || {});
+
 /* ---------- state ---------- */
 
 function blankState() {
@@ -506,6 +517,7 @@ function exportXML() {
   const { errs, project: p } = validate();
   $("#x-errors").textContent = errs.join("\n");
   if (errs.length) return;
+  if (!meterAllows()) return;
   const c = state.company;
   const dates = weekDates(week.weekEnding);
 
@@ -700,6 +712,7 @@ async function exportPDF() {
   const { errs, project: p } = validate();
   $("#x-errors").textContent = errs.join("\n");
   if (errs.length) return;
+  if (!meterAllows()) return;
   const c = state.company;
   const dates = weekDates(week.weekEnding);
 
@@ -734,6 +747,76 @@ async function exportPDF() {
   const fname = `WH347_${(p.projectNum || p.dirProjectID || "report")}_${mmddyy(week.weekEnding)}.pdf`;
   downloadBlob(new Blob([bytes], { type: "application/pdf" }), fname);
   persistWeek();
+}
+
+/* ---------- paywall (dormant until PAYWALL.enabled) ---------- */
+
+function getMeter() {
+  try { return JSON.parse(localStorage.getItem("ecprx-meter") || "{}"); } catch (e) { return {}; }
+}
+function setMeter(m) { localStorage.setItem("ecprx-meter", JSON.stringify(m)); }
+
+/* Counts distinct exported reports (project+week), not button clicks —
+   re-downloading the same week is free. Returns true if export may proceed. */
+function meterAllows() {
+  if (!PAYWALL.enabled) return true;
+  const m = getMeter();
+  if (m.licenseKey) return true;
+  const id = week.projectId + "|" + week.weekEnding;
+  const used = m.reports || [];
+  if (used.indexOf(id) !== -1) return true;
+  if (used.length < PAYWALL.freeReports) {
+    used.push(id); m.reports = used; setMeter(m);
+    return true;
+  }
+  showPaywall();
+  return false;
+}
+
+function showPaywall() {
+  let el = $("#paywall-modal");
+  if (!el) {
+    el = document.createElement("div");
+    el.id = "paywall-modal";
+    el.style.cssText = "position:fixed;inset:0;background:rgba(20,28,46,.75);display:flex;align-items:center;justify-content:center;z-index:50";
+    el.innerHTML = `
+      <div style="background:#fff;border-radius:12px;max-width:440px;padding:28px;margin:16px">
+        <h3 style="margin-top:0">You've used your ${PAYWALL.freeReports} free reports</h3>
+        <p>${PAYWALL.priceText}. Instant access — your data stays in your browser either way.</p>
+        <p><a class="cta" href="${PAYWALL.checkoutUrl}" target="_blank" rel="noopener">Get unlimited reports</a></p>
+        <p style="font-size:13px;color:#5a6478">Already purchased? Paste your license key:</p>
+        <div style="display:flex;gap:8px">
+          <input id="license-input" placeholder="XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX" style="flex:1">
+          <button class="secondary" id="license-activate">Activate</button>
+        </div>
+        <p id="license-msg" style="font-size:13px;color:#a33"></p>
+        <p style="text-align:right;margin-bottom:0"><button class="secondary" id="paywall-close">Close</button></p>
+      </div>`;
+    document.body.appendChild(el);
+    $("#paywall-close").addEventListener("click", () => el.remove());
+    $("#license-activate").addEventListener("click", async () => {
+      const key = $("#license-input").value.trim();
+      if (!key) return;
+      $("#license-msg").textContent = "Checking…";
+      try {
+        const r = await fetch("https://api.lemonsqueezy.com/v1/licenses/activate", {
+          method: "POST",
+          headers: { "Accept": "application/json", "Content-Type": "application/json" },
+          body: JSON.stringify({ license_key: key, instance_name: "ecpr-express-browser" })
+        });
+        const data = await r.json();
+        if (data.activated || (data.license_key && data.license_key.status === "active")) {
+          const m = getMeter(); m.licenseKey = key; setMeter(m);
+          el.remove();
+          alert("License activated — unlimited reports on this device. Thank you!");
+        } else {
+          $("#license-msg").textContent = data.error || "That key didn't validate — reply to your receipt email and we'll sort it out.";
+        }
+      } catch (e) {
+        $("#license-msg").textContent = "Network error — try again, or email us.";
+      }
+    });
+  }
 }
 
 /* ---------- download ---------- */
