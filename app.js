@@ -393,7 +393,7 @@ function renderWeekly() {
     <div class="export-box">
       <h3>Download your report</h3>
       <p class="hint">eCPR XML → log in at the <a href="https://services.dir.ca.gov/pw" target="_blank" rel="noopener">DIR Public Works Portal</a>, upload the XML file, then sign &amp; submit there. WH-347 PDF → for federal jobs or your records.</p>
-      <p class="hint">The XML filename (e.g. <code>6789_412345_060626.xml</code>) follows the DIR's required naming format — don't rename it. If your browser shows a download warning, choose Keep: the file is created on your own computer from the data you typed; nothing is downloaded from the internet.</p>
+      <p class="hint" id="x-namehint">The XML filename follows the DIR's required format — don't rename it. If your browser shows a download warning, choose Keep: the file is created on your own computer from the data you typed; nothing is downloaded from the internet.</p>
       <div class="row-actions">
         <button class="primary" id="x-xml">Download eCPR XML</button>
         <button class="primary" id="x-pdf">Download WH-347 PDF</button>
@@ -451,6 +451,13 @@ function renderWeekly() {
   $("#w-newweek").addEventListener("click", () => { week = newWeek(); renderWeekly(); });
   $("#x-xml").addEventListener("click", exportXML);
   $("#x-pdf").addEventListener("click", exportPDF);
+
+  const hintProj = state.projects.find(x => x.id === week.projectId);
+  if (hintProj && hintProj.dirProjectID && week.weekEnding && /^[0-9]{9}$/.test(state.company.fein)) {
+    $("#x-namehint").innerHTML = `Your XML will be named <code>${state.company.fein.slice(-4)}_${esc(hintProj.dirProjectID)}_${mmddyy(week.weekEnding)}.xml</code> —
+      the DIR's required format (<em>FEIN last 4&nbsp;_&nbsp;DIR project ID&nbsp;_&nbsp;week ending MMDDYY</em>). Don't rename it.
+      If your browser shows a download warning, choose Keep: the file is created on your own computer from the data you typed; nothing is downloaded from the internet.`;
+  }
 }
 
 function updateCalcs(empId) {
@@ -745,9 +752,15 @@ async function exportPDF() {
     }
     bytes = await out.save();
   }
-  const fname = `WH347_${(p.projectNum || p.dirProjectID || "report")}_${mmddyy(week.weekEnding)}.pdf`;
+  const projName = sanitizeFilename(p.label || p.projectName || p.projectNum || p.dirProjectID || "project");
+  const payrollPart = week.payrollNum ? ` - Payroll ${sanitizeFilename(week.payrollNum)}` : "";
+  const fname = `WH-347 ${projName}${payrollPart} - Week Ending ${week.weekEnding}.pdf`;
   downloadBlob(new Blob([bytes], { type: "application/pdf" }), fname);
   persistWeek();
+}
+
+function sanitizeFilename(s) {
+  return String(s).replace(/[\\/:*?"<>|]/g, "-").replace(/\s+/g, " ").trim().slice(0, 60);
 }
 
 /* ---------- paywall (dormant until PAYWALL.enabled) ---------- */
