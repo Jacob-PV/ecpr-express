@@ -16,8 +16,14 @@
     and the official <strong>WH-347</strong> PDF — calculations done for you.</p>
     <p class="privacy">🔒 Everything runs in your browser. Names, SSNs, and wages are saved on <em>your</em> computer only — nothing is ever sent to a server.</p>
     <a class="cta" href="#app">Start your payroll report — free</a>
-    <p class="beta-note">Free during launch. Founding customers lock in $19/month for unlimited reports —
-    <a href="mailto:shortstop900235@gmail.com?subject=eCPR%20Express%20founding%20price">claim founding pricing</a>.</p>
+    <form class="founding-form" action="https://formsubmit.co/shortstop900235@gmail.com" method="POST">
+      <input type="hidden" name="_subject" value="eCPR Express founding-price signup">
+      <input type="hidden" name="_captcha" value="false">
+      <input type="hidden" name="_next" value="https://jacob-pv.github.io/ecpr-express/?subscribed=1">
+      <input type="email" name="email" required placeholder="you@yourcompany.com" aria-label="Email">
+      <button type="submit" class="primary">Lock in $19/mo founding price</button>
+    </form>
+    <p class="beta-note">Free during launch. Founding customers keep $19/month for unlimited reports when paid plans start — no charge today, no card needed.</p>
   </div>
 </header>
 
@@ -57,6 +63,13 @@
   <details><summary>Does this submit to the DIR for me?</summary><p>Not yet. You download the XML file and upload it at the DIR's eCPR page (Submit Payroll in XML File), then sign and submit there. That upload takes about a minute — the painful part (typing in every worker, every day, every deduction) is what we eliminate.</p></details>
   <details><summary>Is the WH-347 accepted by agencies?</summary><p>We fill the official U.S. Department of Labor WH-347 form itself (OMB-approved layout), including the Statement of Compliance on page 2.</p></details>
   <details><summary>What about more than 8 workers?</summary><p>The WH-347 has 8 rows per sheet — we automatically produce additional continuation sheets in the same PDF. The eCPR XML has no worker limit.</p></details>
+</section>
+
+<section class="container" style="padding-bottom:30px">
+  <h2>Guides</h2>
+  <p><a href="guides/ecpr-xml-upload.html">How to submit certified payroll to the DIR by XML upload</a> ·
+  <a href="guides/wh347-form.html">The WH-347 form, column by column</a> ·
+  <a href="guides/non-performance.html">Statements of non-performance</a></p>
 </section>
 
 <footer>

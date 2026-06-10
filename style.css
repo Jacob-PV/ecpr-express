@@ -21,6 +21,10 @@ body { margin: 0; font-family: -apple-system, "Segoe UI", Roboto, Arial, sans-se
 .cta:hover { background: var(--accent-dark); }
 .beta-note { font-size: 14px; color: #aab6cc; }
 .beta-note a { color: #f0b08a; }
+.founding-form { display: flex; gap: 8px; margin-top: 14px; max-width: 520px; flex-wrap: wrap; }
+.founding-form input[type=email] { flex: 1; min-width: 220px; padding: 11px 12px; border-radius: 7px; border: 1px solid rgba(255,255,255,.3); background: rgba(255,255,255,.95); font-size: 15px; }
+.founding-form button { background: var(--accent); border: none; color: #fff; font-weight: 700; font-size: 15px; padding: 11px 18px; border-radius: 7px; cursor: pointer; }
+.founding-form button:hover { background: var(--accent-dark); }
 
 .features { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 18px; padding: 34px 20px; }
 .feature { background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 18px 20px; }

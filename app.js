@@ -381,7 +381,7 @@ function renderWeekly() {
     </div>
     <div class="export-box">
       <h3>Download your report</h3>
-      <p class="hint">eCPR XML → upload at the <a href="https://apps.dir.ca.gov/ecpr/DAS/AltLogin" target="_blank" rel="noopener">DIR eCPR portal</a> ("Submit Payroll in XML File"), then sign &amp; submit there. WH-347 PDF → for federal jobs or your records.</p>
+      <p class="hint">eCPR XML → log in at the <a href="https://services.dir.ca.gov/pw" target="_blank" rel="noopener">DIR Public Works Portal</a>, upload the XML file, then sign &amp; submit there. WH-347 PDF → for federal jobs or your records.</p>
       <div class="row-actions">
         <button class="primary" id="x-xml">Download eCPR XML</button>
         <button class="primary" id="x-pdf">Download WH-347 PDF</button>
@@ -748,6 +748,13 @@ function downloadBlob(blob, filename) {
 }
 
 /* ---------- init ---------- */
+
+if (location.search.indexOf("subscribed=1") !== -1) {
+  const note = document.createElement("div");
+  note.textContent = "✓ You're on the founding list — we'll email you before paid plans start. The tool below is free to use right now.";
+  note.style.cssText = "background:#1d7a3e;color:#fff;padding:12px 18px;text-align:center;font-weight:600";
+  document.body.prepend(note);
+}
 
 renderCompany();
 renderProjects();

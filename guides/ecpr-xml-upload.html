@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>How to Submit Certified Payroll to the California DIR by XML Upload (2026 Guide)</title>
+<meta name="description" content="Step-by-step guide to filing California eCPR certified payroll records by XML upload instead of hand-typing the DIR online form: file format, naming convention, corrections, and a free XML generator.">
+<link rel="canonical" href="https://jacob-pv.github.io/ecpr-express/guides/ecpr-xml-upload.html">
+<link rel="stylesheet" href="../style.css">
+</head>
+<body>
+<header class="hero" style="padding:28px 0">
+  <div class="container">
+    <div class="brand"><a href="../" style="color:#f0b08a;text-decoration:none">eCPR&nbsp;Express</a></div>
+    <h1 style="font-size:30px">How to submit certified payroll to the DIR by XML upload (2026)</h1>
+  </div>
+</header>
+<main class="container" style="max-width:760px;padding:28px 20px">
+  <p>If you work on a California public-works project, Labor Code 1771.4 requires you to submit certified payroll records (CPRs) electronically to the DIR — usually every week you work. You have two options on the
+  <a href="https://services.dir.ca.gov/pw" rel="noopener">DIR Public Works Portal</a>:</p>
+  <ol>
+    <li><strong>Type everything into the online eCPR form</strong> — every worker, every day's hours, every deduction, every week. For a crew of five this commonly takes an hour or more per week.</li>
+    <li><strong>Upload an XML file</strong> — the portal validates it, loads it into the form for you, and you just review, sign, and submit.</li>
+  </ol>
+  <p>The XML route is far faster — <em>if</em> you can produce a valid file. The DIR's official suggestion is editing the sample file by hand in a text editor, which is where most people give up. (Our <a href="../">free generator</a> produces the file from a simple form instead.)</p>
+
+  <h2>What the XML file must contain</h2>
+  <p>The file must conform to the DIR's <code>CPR.xsd</code> schema. In practice that means, in this exact structure:</p>
+  <ul>
+    <li><strong>Contractor info</strong> — legal name, license type and number (CSLB, PL, or OTHER), your 10-digit PWCR registration number (or <code>NA</code>), 9-digit FEIN, address, workers' comp policy number, email.</li>
+    <li><strong>Project info</strong> — the DIR Project ID (the "PWC-100 number") and the entity you contract with ("Contract With"). Most other project fields must be left <em>empty</em> — the portal fills them from the PWC-100 database.</li>
+    <li><strong>Payroll info</strong> — week ending date, and for each worker: name, address, SSN, withholding exemptions, work classification, daily straight/overtime/double-time hours, hourly rates, gross (this project and all work), itemized deductions, net paid, and check number.</li>
+  </ul>
+
+  <h2>Critical details that cause rejections</h2>
+  <ul>
+    <li><strong>"Contract With" must match exactly.</strong> If the hiring contractor's name differs even by punctuation or spacing from the PWC-100 record, the system opens a <em>new payroll branch</em> and your numbering breaks.</li>
+    <li><strong>File naming convention:</strong> <code>[last 4 of FEIN]_[Project ID]_[week ending MMDDYY].xml</code> — e.g. <code>6789_412345_060626.xml</code>.</li>
+    <li><strong>Formats are strict:</strong> SSN and FEIN are digits only; ZIPs are 5 digits; states are 2 capital letters; dates are <code>yyyy-mm-dd</code>; the worker name attribute must be <code>SSN::NAME</code> with the name in CAPS.</li>
+    <li><strong>Payroll and amendment numbers must be left empty</strong> — the system assigns them.</li>
+  </ul>
+
+  <h2>Submitting corrections</h2>
+  <p>You can't edit a submitted record. To correct one, re-upload a fixed XML where the FEIN/SSN, DIR Project ID, contract agency name, week ending date, craft, and base hourly rate all match the original exactly — the system then files it as Amendment 1 (then 2, and so on). If the error is in one of those key fields, it becomes a brand-new report; explain the situation in the Notes field.</p>
+
+  <h2>Non-performance weeks</h2>
+  <p>Weeks with no work on the project still need a record: a statement of non-performance (<code>statementOfNP = true</code>, no employee records). Skipping these is one of the most common compliance gaps.</p>
+
+  <h2>The fast way</h2>
+  <p><a href="../">eCPR Express</a> generates a schema-valid eCPR XML (and the federal WH-347 PDF) from a simple web form, remembers your crew and projects between weeks, and runs entirely in your browser — names, SSNs, and wages never touch a server. It's free during launch.</p>
+  <p><a class="cta" href="../#app">Generate this week's eCPR XML free →</a></p>
+</main>
+<footer><div class="container"><p><a href="../">eCPR Express home</a> · <a href="wh347-form.html">WH-347 guide</a> · <a href="non-performance.html">Non-performance statements</a></p>
+<p class="fine">Not affiliated with the California DIR or U.S. DOL. Informational only — not legal advice.</p></div></footer>
+</body>
+</html>

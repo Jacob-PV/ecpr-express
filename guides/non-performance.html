@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Statement of Non-Performance: When and How to File It (California eCPR + WH-347)</title>
+<meta name="description" content="Didn't work on your public-works project this week? You may still need to file. What a statement of non-performance is, when it's required, and how to file one in the California eCPR system.">
+<link rel="canonical" href="https://jacob-pv.github.io/ecpr-express/guides/non-performance.html">
+<link rel="stylesheet" href="../style.css">
+</head>
+<body>
+<header class="hero" style="padding:28px 0">
+  <div class="container">
+    <div class="brand"><a href="../" style="color:#f0b08a;text-decoration:none">eCPR&nbsp;Express</a></div>
+    <h1 style="font-size:30px">Statements of non-performance: the filing everyone forgets</h1>
+  </div>
+</header>
+<main class="container" style="max-width:760px;padding:28px 20px">
+  <p>Certified payroll isn't only for the weeks you work. Once you start on a California public-works project (and on many federal jobs, per contract terms), agencies expect an unbroken weekly record from your first week to your last. For a week with no work on that project, that record is a <strong>statement of non-performance</strong>.</p>
+
+  <h2>Why it matters</h2>
+  <ul>
+    <li><strong>Gaps look like missing payrolls.</strong> A labor compliance officer can't tell "we didn't work" from "they didn't file." Gaps trigger inquiries, and under Labor Code 1776 the penalty for failing to provide records runs $100 per worker per day.</li>
+    <li><strong>Payroll numbering stays sequential.</strong> Your payroll #7 should be the seventh week after you started, idle weeks included.</li>
+    <li><strong>Primes get held up too</strong> — awarding bodies often hold progress payments until every sub's records are current.</li>
+  </ul>
+
+  <h2>Filing in the California eCPR system</h2>
+  <p>In the DIR's eCPR submission (online form or XML upload), a non-performance week is the same record with the <code>statementOfNP</code> flag set to <code>true</code> and <em>no employee entries at all</em>. Contractor and project information is still required, and you still sign the certification.</p>
+  <p>If you file by XML, the file still follows the normal naming convention (<code>[last 4 of FEIN]_[Project ID]_[week ending MMDDYY].xml</code>) — see our <a href="ecpr-xml-upload.html">full eCPR XML guide</a>.</p>
+
+  <h2>On federal WH-347 projects</h2>
+  <p>There's no dedicated DOL form; the convention is a WH-347 (or letter) marked "non-performance" for the week, keeping the payroll number sequence intact. Check your contracting agency's preference — some accept a single letter covering a known idle period.</p>
+
+  <h2>The two-minute version</h2>
+  <p><a href="../">eCPR Express</a> has a one-click non-performance mode: pick the project, set the week ending date, mark "no work performed," and download a valid eCPR XML (or WH-347 PDF) ready to submit. Free during launch, fully in-browser.</p>
+  <p><a class="cta" href="../#app">File a non-performance week free →</a></p>
+</main>
+<footer><div class="container"><p><a href="../">eCPR Express home</a> · <a href="ecpr-xml-upload.html">eCPR XML guide</a> · <a href="wh347-form.html">WH-347 guide</a></p>
+<p class="fine">Not affiliated with the California DIR or U.S. DOL. Informational only — not legal advice.</p></div></footer>
+</body>
+</html>

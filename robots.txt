@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://jacob-pv.github.io/ecpr-express/sitemap.xml
