@@ -134,6 +134,14 @@ function renderCompany() {
     <div class="row-actions">
       <button class="primary" id="c-save">Save company</button>
       <span class="saved-flash" id="c-flash"></span>
+    </div>
+    <h3 style="margin-top:28px">Backup &amp; transfer</h3>
+    <p class="hint">Your data lives only in this browser. Download a backup to move to another computer, share with your bookkeeper, or protect against the browser clearing site data. The file contains unencrypted SSNs — store it like any payroll record.</p>
+    <div class="row-actions">
+      <button class="secondary" id="bk-export">Download backup file</button>
+      <button class="secondary" id="bk-import">Restore from backup…</button>
+      <input type="file" id="bk-file" accept=".json,application/json" style="display:none">
+      <span class="saved-flash" id="bk-flash"></span>
     </div>`;
   $("#c-save").addEventListener("click", () => {
     ["name", "licenseNum", "pwcr", "fein", "street", "city", "insuranceNum", "email"].forEach(k => c[k] = $("#c-" + k).value.trim());
@@ -144,6 +152,39 @@ function renderCompany() {
     save();
     $("#c-flash").textContent = "Saved ✓";
     setTimeout(() => { $("#c-flash").textContent = ""; }, 2000);
+  });
+
+  $("#bk-export").addEventListener("click", () => {
+    const payload = { app: "ecpr-express", version: 1, exportedAt: new Date().toISOString(), data: state };
+    const today = iso(new Date());
+    downloadBlob(new Blob([JSON.stringify(payload, null, 2)], { type: "application/json" }),
+      `eCPR-Express-backup-${today}.json`);
+  });
+  $("#bk-import").addEventListener("click", () => $("#bk-file").click());
+  $("#bk-file").addEventListener("change", () => {
+    const f = $("#bk-file").files[0];
+    if (!f) return;
+    const reader = new FileReader();
+    reader.onload = () => {
+      try {
+        const parsed = JSON.parse(reader.result);
+        const data = parsed && parsed.app === "ecpr-express" ? parsed.data : parsed; // accept raw state too
+        if (!data || typeof data.company !== "object" || !Array.isArray(data.employees) || !Array.isArray(data.projects)) {
+          throw new Error("not a recognizable backup");
+        }
+        const summary = `${data.employees.length} worker(s), ${data.projects.length} project(s), ${(data.weeks || []).length} saved week(s)`;
+        if (!confirm(`Restore backup with ${summary}?\n\nThis REPLACES everything currently saved in this browser.`)) return;
+        state = Object.assign(blankState(), data);
+        week = null;
+        save();
+        renderCompany(); renderProjects(); renderEmployees(); renderWeekly();
+        $("#bk-flash").textContent = "Restored ✓";
+        setTimeout(() => { const el = $("#bk-flash"); if (el) el.textContent = ""; }, 3000);
+      } catch (e) {
+        alert("That file doesn't look like an eCPR Express backup (" + e.message + ").");
+      }
+    };
+    reader.readAsText(f);
   });
 }
 
@@ -400,6 +441,7 @@ function renderWeekly() {
         <button class="secondary" id="w-saveweek">Save week</button>
         <button class="secondary" id="w-newweek">Start new week</button>
       </div>
+      <p class="hint">Beta: review every figure against your payroll records before signing or submitting — you're certifying it, not us. <a href="terms.html" target="_blank">Terms</a>.</p>
       <p class="error" id="x-errors"></p>
     </div>`;
 
